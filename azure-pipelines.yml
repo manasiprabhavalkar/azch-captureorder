@@ -1,34 +1,27 @@
-variables:
-
-  - name: dockerRegistryServiceConnection
-    value: 'containerRegistryConnection' # make sure it matches the name you used in the service connection
-  
-  - name: acrEndpoint
-    value: 'acraks226621.azurecr.io' # replace with container registry endpoint
-
-  - name: tag
-    value: '$(Build.BuildId)'
-
 stages:
 - stage: Build
-  displayName: Build stage
-  jobs:  
+  jobs:
   - job: Build
-    displayName: Build job
     pool:
-      vmImage: ubuntu-latest
+      vmImage: 'Ubuntu-16.04'
+    continueOnError: true
     steps:
+    - script: echo "hello to my first Build"    
+
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Login to Aqua
       inputs:
-        command: buildAndPush
-        repository: captureorder
-        dockerfile: '**/Dockerfile'
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: $(tag)
+        command: login
+        containerRegistry: jakeaquaregistry
 
-    - task: PublishPipelineArtifact@0
+    - task: aquasecScanner@4
       inputs:
-        artifactName: 'manifests'
-        targetPath: 'manifests'
-
+        image: 'nginx:latest'
+        scanType: 'local'
+        register: false
+        hideBase: false
+        showNegligible: false
+        scanner: 'registry.aquasec.com/scanner:6.0'
+        registry: 'Docker Hub'
+        connection: 'Aqua Demo Console Jake'
+        caCertificates: true
