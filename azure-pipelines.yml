@@ -12,7 +12,7 @@ stages:
       displayName: Login to Aqua
       inputs:
         command: login
-        containerRegistry: jakeaquaregistry
+        containerRegistry: manasiaquaregistry
 
     - task: aquasecScanner@4
       inputs:
@@ -23,5 +23,5 @@ stages:
         showNegligible: false
         scanner: 'registry.aquasec.com/scanner:6.0'
         registry: 'Docker Hub'
-        connection: 'Aqua Demo Console Jake'
+        connection: 'Aqua Demo Console Manasi'
         caCertificates: true
